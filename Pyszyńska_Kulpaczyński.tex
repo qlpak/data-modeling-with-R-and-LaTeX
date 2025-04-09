@@ -1,0 +1,869 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}    
+\usepackage[polish]{babel} 
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{ragged2e} 
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{placeins}
+\justifying
+\usepackage[utf8]{inputenc} 
+\usepackage{titling} 
+\setlength{\droptitle}{-1.5em}
+\pretitle{\centering\Large} 
+\posttitle{\par\vspace{0.6em}} 
+\preauthor{\centering\large} 
+\postauthor{\par\vspace{0.65em}}
+\predate{\centering\large} 
+\postdate{\par}
+
+\title{Projekt Egzaminacyjny}
+\author{Małgorzata Pyszyńska i Łukasz Kulpaczyński}
+\date{Listopad 2024 - Styczeń 2025}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Wstęp}
+
+W niniejszej pracy podejmujemy się analizy log-zwrotów dwóch polskich spółek giełdowych: Allegro i LPP. Celem pracy jest szczegółowe zbadanie statystycznych właściwości danych finansowych oraz ocena ich dopasowania do modeli teoretycznych. Praca podzielona jest na trzy główne etapy.
+
+Pierwszy etap, opisany w rozdziale \textit{Analiza log-zwrotów spółek Allegro i LPP}, obejmuje wstępną wizualizację danych oraz podstawową analizę statystyczną. Celem tej części jest ogólne scharakteryzowanie zmienności log-zwrotów oraz ich rozkładu, co stanowi punkt wyjścia do dalszych analiz. 
+
+Drugi etap, omówiony w rozdziale \textit{Analiza łącznego rozkładu log-zwrotów}, zakłada analizę wektora log-zwrotów dwóch spółek giełdowych, przyjmując, że log-zwroty są realizacjami wektora losowego $(X, Y)$. W tym rozdziale estymuje się wybrane parametry statystyczne wielowymiarowego rozkładu takie jak na przykład współczynnik korelacji i macierz kowariancji a następnie dokonuje analizy łącznego i brzegowych rozkładów. 
+
+Trzeci etap pracy to \textit{Regresja liniowa}, w którym analizujemy zależności między log-zwrotami obu spółek za pomocą modelowania regresyjnego. Celem jest określenie wzajemnych powiązań między spółkami oraz zbadanie matematycznej struktury zależności między nimi.
+
+
+Do przeprowadzenia obliczeń oraz wizualizacji wyników zastosowano środowisko RStudio, które umożliwiło efektywną realizację zaawansowanych analiz statystycznych i tworzenie wykresów ilustrujących wyniki. 
+
+\subsection{Charakterystyka spółki Allegro.eu S.A. - Małgorzata Pyszyńska}
+Allegro.eu S.A. to wiodąca polska platforma e-commerce, która łączy miliony klientów z tysiącami sprzedawców w Europie Środkowo-Wschodniej. Firma oferuje szeroki asortyment produktów w kluczowych kategoriach, takich jak motoryzacja, moda, dom i ogród, elektronika, książki, dzieci, zdrowie i uroda.
+
+\subsection{Charakterystyka spółki LPP S.A. - Łukasz Kulpaczyński}
+LPP S.A. to polska spółka odzieżowa, specjalizująca się w projektowaniu, produkcji oraz dystrybucji odzieży i akcesoriów pod markami Reserved, Cropp, House, Mohito i Sinsay. Firma prowadzi działalność zarówno poprzez sieć sklepów stacjonarnych, jak i kanały e-commerce, z sukcesem rozwijając swoją obecność na rynkach europejskich oraz pozaeuropejskich.
+
+
+
+\section{Analiza log-zwrotów spółek Allegro i LPP}
+
+\subsection{Wizualizacja danych}
+
+Dane analizowane w projekcie obejmują dzienne kursy zamknięcia akcji spółek Allegro.eu S.A. oraz LPP S.A. w okresie od 1 stycznia 2022 roku do 31 grudnia 2023 roku. Na ich podstawie obliczono dzienne log-zwroty według wzoru:
+    \[
+    r_t = \ln\left(\frac{S_t}{S_{t-1}}\right),
+    \]
+gdzie \( S_t \) oznacza kurs zamknięcia w dniu \( t \), a \( S_{t-1} \) kurs zamknięcia w dniu poprzednim.
+
+\subsubsection{Allegro.eu S.A.}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.45\textwidth}
+        \vspace{-5cm} 
+        \justifying
+        \textbf{Komentarz:} Kursy zamknięcia akcji Allegro.eu S.A. w latach 2022–2023. 
+        Wykres ilustruje zmienność cen akcji w czasie, z wyraźnymi wahaniami i potencjalnymi trendami.
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{allegro_closing_prices.png}
+        \caption{Kursy zamknięcia akcji Allegro.eu S.A. w latach 2022–2023.}
+        \label{fig:allegro_closing_prices}
+    \end{minipage}
+\end{figure}
+
+\vspace{0.5cm}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{allegro_log_returns.png}
+        \caption{Dziennie log-zwroty akcji Allegro.eu S.A. w latach 2022–2023.}
+        \label{fig:allegro_log_returns}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \vspace{-5cm} 
+        \justifying
+        \textbf{Komentarz:} Dziennie log-zwroty akcji Allegro.eu S.A. w latach 2022–2023. 
+        Wykres przedstawia dzienne zmiany logarytmiczne, ukazując okresy zwiększonej zmienności.
+    \end{minipage}
+\end{figure}
+
+\vspace{1cm}
+
+\subsubsection{LPP S.A.}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.45\textwidth}
+        \vspace{-5cm}
+        \justifying
+        \textbf{Komentarz:} Kursy zamknięcia akcji LPP S.A. w latach 2022–2023. 
+        Wykres przedstawia zmienność cen akcji na przestrzeni dwóch lat, z wyraźnymi wahaniami sezonowymi.
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, keepaspectratio]{lpp_closing_prices.png}
+        \caption{Kursy zamknięcia akcji LPP S.A. w latach 2022–2023.}
+        \label{fig:lpp_closing_prices}
+    \end{minipage}
+\end{figure}
+
+\vspace{0.5cm}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, keepaspectratio]{lpp_log_returns.png}
+        \caption{Dziennie log-zwroty akcji LPP S.A. w latach 2022–2023.}
+        \label{fig:lpp_log_returns}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \vspace{-5cm} 
+        \justifying
+        \textbf{Komentarz:} Dziennie log-zwroty akcji LPP S.A. w latach 2022–2023. 
+        Ukazano zmienność logarytmiczną cen, wskazując na dużą zmienność w wybranych okresach.
+    \end{minipage}
+\end{figure}
+
+
+\subsection{Podstawowa analiza statystyczna log-zwrotów}
+
+Zakładamy, że log-zwroty \( r_1, r_2, \ldots, r_n \) są niezależnymi realizacjami zmiennej losowej \( X \), o nieznanej dystrybuancie \( F \), wartości oczekiwanej \( \mu \) i wariancji \( \sigma^2 \). Estymatory klasyczne dla tych parametrów to:
+\begin{itemize}
+    \item Estymator wartości oczekiwanej (średnia):
+    \[
+    \overline{X}_n = \frac{1}{n} \sum_{i=1}^n X_i
+    \]
+    \item Estymator wariancji:
+    \[
+    S_n^2 = \frac{1}{n} \sum_{i=1}^n (X_i - \overline{X}_n)^2
+    \]
+    \item Estymator odchylenia standardowego:
+    \[
+    S_n = \sqrt{S_n^2}
+    \]
+\end{itemize}
+
+
+Dla kwantyli rzędu \( \alpha = 5\%, 50\%, 95\% \) korzystamy z klasycznego estymatora kwantyli zaimplementowanego w R:
+\[
+\hat{q}_\alpha = \text{quantile}(r, \alpha).
+\]
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        Spółka & Średnia & Wariancja & Odchylenie & Kwantyl 5\% & Kwantyl 50\% & Kwantyl 95\% \\ \hline
+        Allegro & -0.00033 & 0.00099 & 0.03140 & -0.04928 & -0.00086 & 0.05000 \\ \hline
+        LPP     & 0.00006  & 0.00109 & 0.03295 & -0.04654 & 0.00000  & 0.05003 \\ \hline
+    \end{tabular}
+    \caption{Podstawowe statystyki log-zwrotów dla Allegro i LPP.}
+    \label{tab:log_returns_stats}
+\end{table}
+
+Histogram log-zwrotów dla spółki Allegro.eu S.A. pozwala na wizualną ocenę rozkładu dziennych zmian cen. Zauważalna jest koncentracja wartości wokół średniej, co sugeruje symetryczny charakter rozkładu. Zaznaczone kwantyle dodatkowo wskazują granice ekstremalnych zmian cen.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{allegro_histogram.png}
+    \caption{Histogram log-zwrotów dla Allegro.eu S.A. z zaznaczonymi średnią i kwantylami.}
+    \label{fig:allegro_histogram}
+\end{figure}
+
+
+Histogram log-zwrotów dla spółki LPP S.A. również wskazuje na symetryczny charakter rozkładu, z log-zwrotami skupionymi wokół wartości średniej. Kwantyle uwidaczniają granice najczęstszych zmian cen oraz ich ekstremalne wartości.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{lpp_histogram.png}
+    \caption{Histogram log-zwrotów dla LPP S.A. z zaznaczonymi średnią i kwantylami.}
+    \label{fig:lpp_histogram}
+\end{figure}
+
+
+Kwantyle pokazują, jak rozkładają się dzienne log-zwroty cen akcji. Wyznaczone wartości dla Allegro i LPP są następujące:
+
+\begin{itemize}
+    \item \textbf{Kwantyl 5\%:} W najgorszych 5\% dni log-zwroty były niższe niż \(-4.93\%\) dla Allegro i \(-4.65\%\) dla LPP.
+    \item \textbf{Kwantyl 50\% (mediana):} Połowa log-zwrotów była niższa lub równa \(-0.086\%\) dla Allegro i \(0.00\%\) dla LPP.
+    \item \textbf{Kwantyl 95\%:} W najlepszych 5\% dni log-zwroty przekraczały \(5.00\%\) dla Allegro i \(5.03\%\) dla LPP.
+\end{itemize}
+
+
+W celu oszacowania dystrybuant empirycznych log-zwrotów \( \hat{F}(x) \) dla spółek Allegro.eu S.A. oraz LPP S.A. zastosowano klasyczny estymator dystrybuanty:
+\[
+\hat{F}_n(x) = \frac{1}{n} \sum_{i=1}^n 1_{\{X_i \leq x\}},
+\]
+gdzie \( 1_{\{X_i \leq x\}} \) to wskaźnik przyjmujący wartość \( 1 \), jeśli \( X_i \leq x \), a \( 0 \) w przeciwnym przypadku. Funkcja \( \hat{F}_n \), zwana \textbf{dystrybuantą empiryczną}, jest funkcją schodkową, której kształt odzwierciedla rozkład log-zwrotów.
+
+Na rysunku \ref{fig:allegro_cdf} przedstawiono dystrybuantę empiryczną dla Allegro.eu S.A., natomiast na rysunku \ref{fig:lpp_cdf} zaprezentowano odpowiedni wykres dla LPP S.A. Oba wykresy ukazują charakterystyczny schodkowy przebieg funkcji, zgodny z istotą dystrybuant empirycznych.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{allegro_cdf.png}
+    \caption{Dystrybuanta empiryczna log-zwrotów dla Allegro.eu S.A.}
+    \label{fig:allegro_cdf}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{lpp_cdf.png}
+    \caption{Dystrybuanta empiryczna log-zwrotów dla LPP S.A.}
+    \label{fig:lpp_cdf}
+\end{figure}
+
+
+\subsection{Analiza dobroci dopasowania rozkładów normalnego i t-Studenta}
+
+W celu oceny dobroci dopasowania danych log-zwrotów spółek Allegro i LPP do rozkładów normalnego oraz t-Studenta zastosowano estymację parametrów metodą największej wiarygodności (MLE). Rozkłady te, ze względu na swoje właściwości, są szeroko stosowane w analizie danych finansowych. 
+
+\subsubsection{Estymowane parametry rozkładów}
+
+Parametry dopasowanych rozkładów normalnego oraz t-Studenta oszacowano przy użyciu biblioteki \texttt{fitdistrplus}. Wyniki estymacji przedstawiono w tabeli \ref{tab:fit_params}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Spółka & Rozkład & Parametry \\ \hline
+Allegro & Normalny & $\mu = -0.0001, \sigma = 0.0201$ \\ 
+Allegro & t-Studenta & $\mu = -0.0001, \sigma = 0.0198, df = 9.7$ \\ 
+LPP     & Normalny & $\mu = 0.0002, \sigma = 0.0189$ \\ 
+LPP     & t-Studenta & $\mu = 0.0002, \sigma = 0.0186, df = 10.1$ \\ \hline
+\end{tabular}
+\caption{Estymowane parametry dopasowanych rozkładów.}
+\label{tab:fit_params}
+\end{table}
+
+\subsubsection{Wykresy diagnostyczne}
+
+Dla obu spółek wygenerowano cztery rodzaje wykresów diagnostycznych, które przedstawiono na rysunkach \ref{fig:allegro_diagnostics} i \ref{fig:lpp_diagnostics}:
+\begin{itemize}
+    \item \textbf{Porównanie gęstości empirycznych i teoretycznych:} umożliwia ocenę, jak dobrze rozkłady teoretyczne odwzorowują empiryczną gęstość danych.
+    \item \textbf{QQ-plot:} przedstawia dopasowanie kwantyli danych do kwantyli teoretycznych, co pozwala ocenić zgodność rozkładów.
+    \item \textbf{Dystrybuanta empiryczna vs teoretyczna:} porównanie funkcji rozkładów kumulacyjnych.
+    \item \textbf{P-P plot:} ukazuje proporcję punktów danych w porównaniu z teoretyczną proporcją dla danego rozkładu.
+\end{itemize}
+
+\paragraph{Wykresy dla Allegro.}  
+Na rysunku \ref{fig:allegro_diagnostics} przedstawiono wykresy diagnostyczne dla log-zwrotów spółki Allegro. Wykresy wskazują na pewne odchylenia od rozkładu normalnego i t-Studenta, szczególnie widoczne na QQ-plotach.
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{cc}
+        \includegraphics[width=0.45\textwidth]{allegro_diagnostics_density.png} &
+        \includegraphics[width=0.45\textwidth]{allegro_diagnostics_qq.png} \\
+        \includegraphics[width=0.45\textwidth]{allegro_diagnostics_cdf.png} &
+        \includegraphics[width=0.45\textwidth]{allegro_diagnostics_pp.png} \\
+    \end{tabular}
+    \caption{Wykresy diagnostyczne dla Allegro: gęstości (góra lewa), QQ-plot (góra prawa), dystrybuanta empiryczna (dół lewa) oraz P-P plot (dół prawa).}
+    \label{fig:allegro_diagnostics}
+\end{figure}
+
+\paragraph{Wykresy dla LPP.}  
+Analogiczne wykresy diagnostyczne dla spółki LPP przedstawiono na rysunku \ref{fig:lpp_diagnostics}. Rozkład normalny wydaje się lepiej odwzorowywać dane w porównaniu do t-Studenta, co widoczne jest szczególnie na QQ-plotach i P-P plotach.
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{cc}
+        \includegraphics[width=0.45\textwidth]{lpp_diagnostics_density.png} &
+        \includegraphics[width=0.45\textwidth]{lpp_diagnostics_qq.png} \\
+        \includegraphics[width=0.45\textwidth]{lpp_diagnostics_cdf.png} &
+        \includegraphics[width=0.45\textwidth]{lpp_diagnostics_pp.png} \\
+    \end{tabular}
+    \caption{Wykresy diagnostyczne dla LPP: gęstości (góra lewa), QQ-plot (góra prawa), dystrybuanta empiryczna (dół lewa) oraz P-P plot (dół prawa).}
+    \label{fig:lpp_diagnostics}
+\end{figure}
+
+\subsubsection{Kryteria dopasowania i weryfikacja modelu}
+
+Do oceny jakości dopasowania wykorzystano statystyki Kolmogorowa-Smirnowa (KS), Craméra-von Misesa (CM), Andersona-Darlinga (AD) oraz kryteria informacyjne Akaikego (AIC) i Bayesa (BIC). Wyniki przedstawiono w tabeli \ref{tab:gof_results}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Spółka & Rozkład & KS & CM & AD & AIC & BIC \\ \hline
+Allegro & Normalny & 0.0603 & 0.5583 & 3.2033 & -2038.016 & -2029.587 \\ 
+Allegro & t-Studenta & 0.4610 & 38.4045 & 180.0888 & 922.3521 & 926.5667 \\ 
+LPP     & Normalny & 0.0816 & 1.2052 & 6.9794 & -1989.767 & -1981.338 \\ 
+LPP     & t-Studenta & 0.4628 & 38.4521 & 180.2731 & 922.4021 & 926.6167 \\ \hline
+\end{tabular}
+\caption{Statystyki dopasowania i kryteria informacyjne dla rozkładów normalnego i t-Studenta.}
+\label{tab:gof_results}
+\end{table}
+
+\subsubsection{Interpretacja wyników}
+
+Na podstawie wyników z tabeli \ref{tab:gof_results} można zauważyć, że:
+\begin{itemize}
+    \item Rozkład normalny lepiej opisuje dane niż rozkład t-Studenta, co widoczne jest w znacznie niższych wartościach AIC i BIC dla obu spółek.
+    \item Statystyki dobroci dopasowania (KS, CM, AD) wskazują na mniejsze odchylenia od rozkładu normalnego w porównaniu do t-Studenta.
+    \item Pomimo grubszych ogonów w rozkładzie t-Studenta, jego dopasowanie do analizowanych danych jest słabsze.
+\end{itemize}
+
+Na tej podstawie jako najlepszy model opisujący dane log-zwrotów dla obu spółek wybrano rozkład normalny.
+
+\subsubsection{Test hipotezy o równości rozkładów dla Allegro i LPP}
+
+W celu przetestowania hipotezy zerowej o zgodności rozkładów log-zwrotów spółek Allegro i LPP z rozkładem normalnym wykorzystano metodę Monte Carlo oraz statystykę Kolmogorowa-Smirnowa (KS). Algorytm testowania przedstawia się następująco:
+
+\begin{enumerate}
+    \item Obliczono wartość statystyki \( D_n \) dla dystrybuant \( F_0 \) (teoretycznej) i \( \hat{F}_n \) (empirycznej).
+    \item Wyznaczono rozkład statystyki \( D_n \) przy użyciu \( N = 10,000 \) symulacji z rozkładu \( F_0 \), każda o liczności \( n = 500 \).
+    \item Oszacowano wartość \( p \) jako proporcję próbek, dla których \( D_n > d_n \).
+    \item Przyjęto poziom istotności \( \alpha = 0.05 \). Jeśli \( p \leq \alpha \), odrzucano hipotezę zerową \( H_0 \), w przeciwnym razie brak było podstaw do jej odrzucenia.
+\end{enumerate}
+
+\paragraph{Test dla Allegro.}  
+\textbf{Hipotezy:}
+\begin{itemize}
+    \item \( H_0 \): Rozkład log-zwrotów spółki Allegro jest zgodny z rozkładem normalnym.
+    \item \( H_1 \): Rozkład log-zwrotów spółki Allegro nie jest zgodny z rozkładem normalnym.
+\end{itemize}
+
+Wyniki testu dla log-zwrotów spółki Allegro przedstawiono w tabeli \ref{tab:mc_test_allegro}. 
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Statystyka KS} & \textbf{p-wartość} \\ \hline
+0.0603 & 0.0452 \\ \hline
+\end{tabular}
+\caption{Wyniki testu Monte Carlo dla spółki Allegro.}
+\label{tab:mc_test_allegro}
+\end{table}
+
+Interpretacja wyników:
+\begin{itemize}
+    \item Statystyka KS wynosi \( 0.0603 \), co wskazuje na niewielkie odchylenie między dystrybuantą empiryczną a teoretyczną.
+    \item p-wartość \( 0.0452 \) jest mniejsza niż \( \alpha = 0.05 \), co prowadzi do odrzucenia hipotezy \( H_0 \). 
+    \item Ostateczny wniosek: \textbf{Hipoteza o normalności rozkładu log-zwrotów dla Allegro została odrzucona.}
+\end{itemize}
+
+\paragraph{Test dla LPP.}  
+\textbf{Hipotezy:}
+\begin{itemize}
+    \item \( H_0 \): Rozkład log-zwrotów spółki LPP jest zgodny z rozkładem normalnym.
+    \item \( H_1 \): Rozkład log-zwrotów spółki LPP nie jest zgodny z rozkładem normalnym.
+\end{itemize}
+
+Wyniki testu dla log-zwrotów spółki LPP przedstawiono w tabeli \ref{tab:mc_test_lpp}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Statystyka KS} & \textbf{p-wartość} \\ \hline
+0.0816 & 0.0026 \\ \hline
+\end{tabular}
+\caption{Wyniki testu Monte Carlo dla spółki LPP.}
+\label{tab:mc_test_lpp}
+\end{table}
+
+Interpretacja wyników:
+\begin{itemize}
+    \item Statystyka KS wynosi \( 0.0816 \), co oznacza większe odchylenie od modelu normalnego w porównaniu do spółki Allegro.
+    \item p-wartość \( 0.0026 \) jest znacznie mniejsza niż \( \alpha = 0.05 \), co prowadzi do odrzucenia hipotezy \( H_0 \). 
+    \item Ostateczny wniosek: \textbf{Hipoteza o normalności rozkładu log-zwrotów dla LPP została odrzucona.}
+\end{itemize}
+
+\subsubsection{Podsumowanie}
+
+Wyniki testów wskazują, że:
+\begin{itemize}
+    \item Rozkład log-zwrotów dla spółki Allegro nie jest zgodny z rozkładem normalnym na poziomie istotności \( \alpha = 0.05 \).
+    \item Dla spółki LPP hipoteza o zgodności rozkładu log-zwrotów z rozkładem normalnym została również odrzucona. Rzeczywisty rozkład wykazuje istotne odchylenia od modelu normalnego.
+\end{itemize}
+
+
+\section{Analiza łącznego rozkładu log-zwrotów}
+
+\subsection{Estymacja parametrów wektora losowego}
+Załóżmy, że log-zwroty dwóch akcji są niezależnymi realizacjami wektora losowego \( (X, Y) \) o nieznanej gęstości \( f \), wektorze średnich \( \mu \), współczynniku korelacji \( \rho \), macierzy kowariancji \( \Sigma \) i macierzy korelacji \( P \).
+
+Wzory estymatorów parametrów wektora losowego są następujące:
+\begin{itemize}
+    \item Wektor średnich:
+    \[
+    \hat{\mu} = \begin{bmatrix} \hat{\mu}_X \\ \hat{\mu}_Y \end{bmatrix}, \quad
+    \hat{\mu}_X = \frac{1}{n} \sum_{i=1}^n X_i, \quad
+    \hat{\mu}_Y = \frac{1}{n} \sum_{i=1}^n Y_i
+    \]
+    \item Macierz kowariancji:
+    \[
+    \hat{\Sigma} = \begin{bmatrix} \mathrm{Var}(X) & \mathrm{Cov}(X, Y) \\ \mathrm{Cov}(X, Y) & \mathrm{Var}(Y) \end{bmatrix}
+    \]
+    \item Współczynnik korelacji:
+    \[
+    \rho = \frac{\mathrm{Cov}(X, Y)}{\sqrt{\mathrm{Var}(X)} \sqrt{\mathrm{Var}(Y)}}
+    \]
+    \item Macierz korelacji:
+    \[
+    \hat{P} = \begin{bmatrix} 1 & \rho \\ \rho & 1 \end{bmatrix}
+    \]
+\end{itemize}
+
+
+Na podstawie danych log-zwrotów dla spółek Allegro i LPP oszacowano kluczowe parametry statystyczne.
+
+\paragraph{Wektor średnich}
+\[
+\hat{\mu} = \begin{bmatrix}
+\text{Allegro: } -0.0003349 \\
+\text{LPP: } 0.0000620
+\end{bmatrix}
+\]
+ Wektor średnich \( \hat{\mu} \) wskazuje na niewielkie średnie log-zwroty dla obu spółek, zbliżone do zera, co sugeruje brak istotnych trendów w zmianach dziennych cen akcji.
+
+\paragraph{Macierz kowariancji}
+\[
+\hat{\Sigma} = \begin{bmatrix}
+0.0009879 & 0.0003974 \\
+0.0003974 & 0.0010880
+\end{bmatrix}
+\]
+Macierz kowariancji \( \hat{\Sigma} \) obrazuje zróżnicowanie i współzmienność log-zwrotów dla obu spółek. Element \( \Sigma_{12} = 0.0003974 \) wskazuje na umiarkowaną pozytywną współzmienność pomiędzy Allegro a LPP. Wartości na diagonali macierzy (\( \Sigma_{11} \) i \( \Sigma_{22} \)) odzwierciedlają zmienność log-zwrotów odpowiednio dla Allegro i LPP.
+
+
+\paragraph{Współczynnik korelacji}
+\[
+\hat{\rho} = 0.3833
+\]
+Współczynnik korelacji \( \hat{\rho} = 0.3833 \) wskazuje na umiarkowaną dodatnią zależność pomiędzy log-zwrotami Allegro i LPP. Oznacza to, że zmienność cen akcji obu spółek wykazuje pewne podobieństwo, ale nie jest to zależność silna.
+
+\paragraph{Macierz korelacji}
+\[
+\hat{P} = \begin{bmatrix}
+1.0000 & 0.3833 \\
+0.3833 & 1.0000
+\end{bmatrix}
+\]
+Macierz korelacji \( \hat{P} \) przedstawia zależności między log-zwrotami obu spółek w sposób standaryzowany. Element \( P_{12} = 0.3833 \) potwierdza dodatnią korelację między Allegro a LPP, natomiast wartości \( P_{11} = P_{22} = 1.0000 \) wskazują na doskonałą korelację zmiennej z samą sobą.
+
+
+
+\subsection{Wykres rozrzutu z histogramami rozkładów brzegowych}
+
+Poniżej przedstawiono wykres rozrzutu log-zwrotów spółek Allegro i LPP, wraz z histogramami ich rozkładów brzegowych. Wykres ten umożliwia ocenę zależności między log-zwrotami obu spółek, a histogramy obrazują rozkłady zmiennych na osiach \( x \) i \( y \).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.54\textwidth]{scatter_with_histograms.png}
+    \caption{Wykres rozrzutu log-zwrotów spółek Allegro i LPP z histogramami rozkładów brzegowych.}
+    \label{fig:scatter_histograms}
+\end{figure}
+
+
+\subsection{Gęstość łączna i brzegowe rozkładu normalnego}
+
+W analizie danych log-zwrotów spółek Allegro i LPP przyjęto założenie, że ich wektor log-zwrotów podąża za dwuwymiarowym rozkładem normalnym \( N(\mu, \Sigma) \), gdzie:
+\begin{itemize}
+    \item \( \mu = (\mu_1, \mu_2) \) to wektor wartości oczekiwanych, reprezentujący średnie log-zwroty dla obu spółek,
+    \item \( \Sigma \) to macierz kowariancji, definiowana jako:
+    \[
+    \Sigma =
+    \begin{bmatrix}
+    \sigma_1^2 & \rho \sigma_1 \sigma_2 \\
+    \rho \sigma_1 \sigma_2 & \sigma_2^2
+    \end{bmatrix},
+    \]
+    gdzie \( \sigma_1, \sigma_2 \) to odchylenia standardowe, a \( \rho \) to współczynnik korelacji między log-zwrotami spółek.
+\end{itemize}
+
+\noindent Wzór gęstości łącznej \( f(x, y) \) pozwala opisać rozkład prawdopodobieństwa jednoczesnych log-zwrotów obu spółek:
+\[
+f(x, y) = \frac{1}{2 \pi \sigma_1 \sigma_2 \sqrt{1-\rho^2}}
+\exp\left(-\frac{1}{2(1-\rho^2)} \left[
+\frac{(x-\mu_1)^2}{\sigma_1^2} - 2\rho \frac{(x-\mu_1)(y-\mu_2)}{\sigma_1\sigma_2} + \frac{(y-\mu_2)^2}{\sigma_2^2}
+\right]\right).
+\]
+Ten wzór pozwala zobrazować, w jaki sposób wartości log-zwrotów dla jednej spółki są powiązane z drugą.
+
+\noindent Gęstości brzegowe \( f_X(x) \) i \( f_Y(y) \) opisują rozkłady log-zwrotów dla poszczególnych spółek:
+\begin{align*}
+f_X(x) &= \frac{1}{\sqrt{2 \pi \sigma_1^2}} \exp\left(-\frac{(x-\mu_1)^2}{2\sigma_1^2}\right), \\
+f_Y(y) &= \frac{1}{\sqrt{2 \pi \sigma_2^2}} \exp\left(-\frac{(y-\mu_2)^2}{2\sigma_2^2}\right).
+\end{align*}
+Gęstości te odzwierciedlają prawdopodobieństwo uzyskania konkretnego log-zwrotu dla każdej ze spółek, niezależnie od wyników drugiej.
+
+\noindent Na rysunku \ref{fig:joint_density} zaprezentowano gęstość łączną, która ukazuje wzajemne zależności log-zwrotów spółek Allegro i LPP. Z kolei rysunki \ref{fig:marginal_density_allegro} i \ref{fig:marginal_density_lpp} przedstawiają gęstości brzegowe dla Allegro i LPP, umożliwiając analizę rozkładu log-zwrotów dla każdej spółki z osobna.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{joint_density_persp.png}
+    \caption{Wykres gęstości łącznej log-zwrotów spółek Allegro i LPP.}
+    \label{fig:joint_density}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{marginal_density_allegro.png}
+    \caption{Gęstość brzegowa log-zwrotów spółki Allegro.}
+    \label{fig:marginal_density_allegro}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{marginal_density_lpp.png}
+    \caption{Gęstość brzegowa log-zwrotów spółki LPP.}
+    \label{fig:marginal_density_lpp}
+\end{figure}
+
+
+\subsection{Porównanie próbek rzeczywistych i generowanych}
+
+W celu oceny, czy rozkład normalny dobrze opisuje dane log-zwrotów dla spółek Allegro i LPP, wygenerowano próbkę o liczności odpowiadającej liczbie obserwacji w danych rzeczywistych. Do generowania próby wykorzystano wyestymowane parametry \( \hat{\mu} \) (wektor średnich) i \( \hat{\Sigma} \) (macierz kowariancji). Następnie porównano wykresy rozrzutu dla danych rzeczywistych oraz próbki generowanej z rozkładu \( N(\hat{\mu}, \hat{\Sigma}) \).
+
+Na rysunku \ref{fig:scatter_comparison} przedstawiono wykresy rozrzutu obok siebie: po lewej stronie dane rzeczywiste, a po prawej próbkę generowaną z rozkładu normalnego. Taki układ umożliwia łatwe porównanie obu rozkładów i ocenę zgodności.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{scatter_real_data.png}
+        \caption*{(a) Dane rzeczywiste.}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{scatter_generated_sample.png}
+        \caption*{(b) Próbka z rozkładu \( N(\hat{\mu}, \hat{\Sigma}) \).}
+    \end{minipage}
+    \caption{Porównanie wykresów rozrzutu dla danych rzeczywistych (a) i próbki generowanej z rozkładu normalnego (b).}
+    \label{fig:scatter_comparison}
+\end{figure}
+
+Porównując wykresy, można zauważyć, że próbka generowana z rozkładu normalnego zachowuje ogólne właściwości struktury danych rzeczywistych. Niemniej różnice w koncentracji punktów w niektórych obszarach wskazują, że rozkład normalny nie w pełni opisuje rzeczywisty charakter log-zwrotów. Wyniki sugerują, że rozkład normalny w pewnym stopniu modeluje dane, ale nie uwzględnia bardziej złożonych zależności.
+
+
+\section{Regresja liniowa dla log-zwrotów}
+W celu analizy zależności między log-zwrotami spółek Allegro i LPP zastosowano klasyczny model regresji liniowej. Analizowane dane obejmują dzienne log-zwroty, których definicję podano w sekcji \textit{Analiza log-zwrotów spółek Allegro i LPP}. Model regresji pozwala na ocenę wzajemnych powiązań między spółkami oraz ich predykcję na podstawie wartości historycznych.
+
+
+\subsection{Przedziały ufności dla wartości oczekiwanej}
+Przedziały ufności (CI – Confidence Interval) umożliwiają oszacowanie przedziału, w którym z określonym poziomem ufności \(1 - \alpha\) znajduje się nieznany parametr (np. średnia \(\mu\)). Ze względu na odrzucenie hipotezy o normalności rozkładu log-zwrotów w teście Monte Carlo, klasyczne podejście do wyznaczania przedziałów ufności, oparte na rozkładzie $t$-Studenta, nie jest odpowiednie. W związku z tym zastosowano metodę bootstrapową, umożliwiającą nieparametryczne oszacowanie przedziału ufności dla wartości oczekiwanej. 
+
+Przy wykorzystaniu $B = 1000$ próbek bootstrapowych, przedział ufności został wyznaczony jako:
+\[
+\left[q^*_{\alpha/2}, q^*_{1-\alpha/2}\right],
+\]
+gdzie $q^*_{\alpha/2}$ i $q^*_{1-\alpha/2}$ oznaczają odpowiednie kwantyle empiryczne uzyskane z rozkładu statystyki bootstrapowej.  
+
+
+Wyniki dla obu spółek:
+\begin{itemize}
+    \item Allegro: [-0.003216, 0.002267],
+    \item LPP: [-0.003243, 0.002879 ].
+\end{itemize}
+Na Rysunkach \ref{fig:bootstrap-allegro} i \ref{fig:bootstrap-lpp} przedstawiono histogramy bootstrapowych średnich.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=8cm]{bootstrap_allegro.png}
+        \caption{Histogram bootstrapowych średnich dla log-zwrotów spółki Allegro.}
+        \label{fig:bootstrap-allegro}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth,  height=8cm]{bootstrap_lpp.png}
+        \caption{Histogram bootstrapowych średnich dla log-zwrotów spółki LPP.}
+        \label{fig:bootstrap-lpp}
+    \end{subfigure}
+    \caption{Histogramy bootstrapowych średnich dla spółek Allegro i LPP.}
+    \label{fig:bootstrap-histograms}
+\end{figure}
+
+Oba histogramy wykazują kształt zbliżony do rozkładu normalnego, co sugeruje, że estymacja średniej przy użyciu metody bootstrapowej jest stabilna. Granice przedziałów ufności oznaczone liniami przerywanymi wskazują zakres zmienności oszacowań średnich w kolejnych próbach bootstrapowych.
+
+W przypadku spółki Allegro, przedział ufności dla wartości oczekiwanej jest stosunkowo wąski, co wskazuje na niską wariancję estymatora. Natomiast dla spółki LPP rozstęp przedziału ufności jest nieco większy, co może wynikać z większej zmienności log-zwrotów tej spółki.
+
+
+\subsection{Analiza modelu klasycznej regresji liniowej}
+Model regresji liniowej opisuje zależność między log-zwrotami \(R_1\) i \(R_2\) za pomocą równania:
+\[
+R_2 = b_0 + b_1 R_1 + \varepsilon,
+\]
+gdzie \(b_0\) i \(b_1\) to współczynniki regresji, a składnik losowy \(\varepsilon\) spełnia założenie \(\varepsilon \sim N(0, \sigma^2)\).
+
+\subsubsection{Estymacja parametrów}
+
+Parametry modelu, \(b_0\) oraz \(b_1\), estymowane są metodą najmniejszych kwadratów, minimalizującą sumę kwadratów reszt. Współczynnik \(b_1\) interpretuje się jako miarę siły zależności między zmiennymi, natomiast \(b_0\) reprezentuje wyraz wolny modelu.
+
+
+\paragraph{Sformułowanie hipotez statystycznych}
+Aby ocenić istotność współczynników regresji, przeprowadzamy testy statystyczne:
+
+\begin{itemize}
+    \item \textbf{Hipoteza zerowa} (\(\mathbf{H_0}\)): Współczynnik regresji jest równy zero (\(b_i = 0\)), co oznacza brak wpływu \(R_1\) na \(R_2\).
+    \item \textbf{Hipoteza alternatywna} (\(\mathbf{H_1}\)): Współczynnik regresji jest różny od zera (\(b_i \neq 0\)), co oznacza, że istnieje istotny wpływ \(R_1\) na \(R_2\).
+\end{itemize}
+
+Test przeprowadzamy na poziomie istotności \(\alpha = 0.05\). Wartość p (p-value) określa prawdopodobieństwo uzyskania wyników równie ekstremalnych, co obserwowane, zakładając prawdziwość hipotezy zerowej. Jeśli \( p \leq 0.05 \), odrzucamy \( H_0 \), co oznacza istotność statystyczną danego współczynnika.
+
+
+\paragraph{Wyznaczenie współczynników regresji}
+Parametry \(b_0\) i \(b_1\) estymujemy na podstawie wzorów:
+\[
+b_1 = \frac{\sum_{i=1}^n (R_{1,i} - \overline{R}_1)(R_{2,i} - \overline{R}_2)}{\sum_{i=1}^n (R_{1,i} - \overline{R}_1)^2}, \quad
+b_0 = \overline{R}_2 - b_1 \cdot \overline{R}_1.
+\]
+
+\paragraph{Wyniki regresji}
+
+Wyniki estymacji parametrów modelu regresji przedstawiono w tabeli \ref{tab:regression_results}. 
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l c c}
+        \toprule
+        \textbf{Parametr} & \textbf{Wartość} & \textbf{\(p\)-value} \\
+        \midrule
+        Wyraz wolny (\(b_0\)) & \(0.0002\) & \(0.885\) (nieistotny) \\
+        Współczynnik nachylenia (\(b_1\)) & \(0.4023\) & \(< 2 \cdot 10^{-16}\) (istotny) \\
+        Współczynnik determinacji (\(R^2\)) & \(0.147\) & -- \\
+        Błąd standardowy reszt (\(RSE\)) & \(0.0305\) & -- \\
+        \bottomrule
+    \end{tabular}
+    \caption{Wyniki estymacji parametrów modelu regresji.}
+    \label{tab:regression_results}
+\end{table}
+
+\paragraph{Analiza wyników regresji}
+\begin{itemize}
+    \item \textbf{Współczynnik nachylenia (\(b_1\))}:
+    \begin{itemize}
+        \item Wartość \(b_1 = 0.4023\) oznacza, że wzrost \(R_1\) o jednostkę skutkuje średnim wzrostem \(R_2\) o około \(0.4023\) jednostki.
+        \item Bardzo niska wartość \(p < 2 \cdot 10^{-16}\) sugeruje, że współczynnik jest \textbf{statystycznie istotny}, co pozwala odrzucić hipotezę zerową (\(H_0\)).
+        \item Oznacza to, że istnieje istotna zależność między \(R_1\) i \(R_2\).
+    \end{itemize}
+    
+    \item \textbf{Wyraz wolny (\(b_0\))}:
+    \begin{itemize}
+        \item Wartość \(b_0 = 0.0002\) jest bardzo bliska zeru.
+        \item Wysoka wartość \(p = 0.885\) sugeruje, że nie można odrzucić hipotezy zerowej (\(H_0\)), co oznacza, że wyraz wolny \textbf{nie jest istotny}.
+        \item Brak istotności \(b_0\) wskazuje, że model dobrze odwzorowuje relację między zmiennymi bez konieczności uwzględniania stałej.
+    \end{itemize}
+    
+    \item \textbf{Współczynnik determinacji (\(R^2\))}:
+    \begin{itemize}
+        \item Wartość \(R^2 = 0.147\) oznacza, że model wyjaśnia \textbf{tylko 14.7\%} zmienności \(R_2\).
+        \item Niska wartość \(R^2\) sugeruje, że istnieją inne istotne czynniki wpływające na \(R_2\), które nie zostały uwzględnione w modelu.
+    \end{itemize}
+    
+    \item \textbf{Błąd standardowy reszt (\(RSE\))}:
+    \begin{itemize}
+        \item Wartość \(RSE = 0.0305\) wskazuje na przeciętne odchylenie wartości przewidywanych od rzeczywistych.
+        \item Relatywnie wysoka wartość \(RSE\) sugeruje, że model może nie być bardzo dokładny.
+    \end{itemize}
+\end{itemize}
+
+
+\subsubsection{Wizualizacja}
+Rysunek \ref{fig:scatter_plot_regression} przedstawia wykres rozrzutu \(R_1\) i \(R_2\) z naniesioną linią regresji.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{scatter_plot_regression.png}
+    \caption{Wykres rozrzutu log-zwrotów spółek Allegro (\(R_1\)) i LPP (\(R_2\)) z linią regresji.}
+    \label{fig:scatter_plot_regression}
+\end{figure}
+
+Na przedstawionym wykresie możemy zauważyć, że dane wykazują umiarkowaną dodatnią zależność pomiędzy log-zwrotami spółek Allegro (\(R_1\)) i LPP (\(R_2\)). Punkty danych są rozproszone wokół linii regresji, co wskazuje, że chociaż istnieje pewien związek między zmiennymi, to nie jest on bardzo silny.
+
+Obecność punktów znacznie oddalonych od linii regresji sugeruje istnienie wartości odstających, które mogą wpływać na dokładność modelu. Ponadto szerokie rozproszenie punktów wokół linii regresji potwierdza niską wartość współczynnika determinacji \(R^2 = 0.147\), co oznacza, że model wyjaśnia tylko niewielką część zmienności log-zwrotów LPP.
+
+\subsubsection{Analiza reszt}
+
+Reszty modelu (\(\varepsilon\)) zostały poddane analizie normalności, aby ocenić, czy spełniają jedno z kluczowych założeń klasycznej regresji liniowej. Normalność reszt jest istotna, ponieważ wpływa na poprawność wnioskowania statystycznego, konstrukcję przedziałów ufności oraz testów istotności współczynników.
+
+\paragraph{Sformułowanie hipotez}
+\begin{itemize}
+    \item \textbf{Hipoteza zerowa} (\(\mathbf{H_0}\)): Reszty są rozłożone zgodnie z rozkładem normalnym.
+    \item \textbf{Hipoteza alternatywna} (\(\mathbf{H_1}\)): Reszty nie mają rozkładu normalnego.
+\end{itemize}
+
+Jeśli wartość \(p\)-value jest mniejsza niż przyjęty poziom istotności (\(\alpha = 0.05\)), odrzucamy hipotezę zerową, co oznacza, że reszty nie są normalnie rozłożone.
+
+\paragraph{Testy normalności}
+W celu sprawdzenia normalności reszt przeprowadzono następujące testy:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l c}
+        \toprule
+        \textbf{Test} & \(\mathbf{p}\)-\textbf{value} \\
+        \midrule
+        Test Shapiro-Wilka & \(p < 2.2 \cdot 10^{-16}\) \\
+        Test Andersona-Darlinga & \(p < 2.2 \cdot 10^{-16}\) \\
+        Test Kołmogorowa-Smirnowa & \(p = 0.0022\) \\
+        \bottomrule
+    \end{tabular}
+    \caption{Wyniki testów normalności reszt.}
+    \label{tab:normality_tests}
+\end{table}
+
+Bardzo niskie wartości \(p\) wskazują na silne odrzucenie hipotezy zerowej o normalności reszt. Oznacza to, że rozkład reszt \textbf{istotnie odbiega od normalnego}, co może wpłynąć na interpretację wyników regresji.
+
+\paragraph{Analiza histogramu reszt}
+Histogram reszt (Rysunek~\ref{fig:residuals_histogram}) sugeruje rozkład zbliżony do normalnego, lecz z wyraźnymi skośnościami i wartościami odstającymi. Można zauważyć lekką asymetrię oraz większą koncentrację wartości w pobliżu zera, a także kilka ekstremalnych wartości, które mogą wpływać na model.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{residuals_histogram.png}
+    \caption{Histogram reszt modelu.}
+    \label{fig:residuals_histogram}
+\end{figure}
+
+\paragraph{Analiza QQ Plota}
+QQ Plot (Rysunek~\ref{fig:residuals_qqplot}) umożliwia graficzną ocenę normalności reszt. Wykres ten porównuje kwantyle teoretyczne rozkładu normalnego z empirycznymi kwantylami reszt.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{residuals_qqplot.png}
+    \caption{QQ Plot reszt modelu.}
+    \label{fig:residuals_qqplot}
+\end{figure}
+
+Na wykresie widać, że większość punktów znajduje się wzdłuż linii teoretycznej normalności, jednak na końcach wykresu występują odchylenia, co wskazuje na wartości odstające i lekką nienormalność rozkładu.
+
+
+\subsubsection{Predykcja}
+Dla średniego log-zwrotu \(R_1 = -0.0003\), przewidywany log-zwrot \(R_2\) wynosi:
+\[
+\hat{R}_2 = 0.000062.
+\]
+
+\paragraph{Interpretacja wyniku}
+
+Przewidywany log-zwrot $R_2$ dla średniego log-zwrotu $R_1$ jest bliski zeru ($\hat{R}_2 = 0.000062$), co sugeruje, że gdy log-zwroty spółki Allegro ($R_1$) oscylują wokół swojej średniej, to log-zwroty spółki LPP ($R_2$) pozostają niemal niezmienione. Oznacza to, że przeciętnie ruchy cen akcji Allegro nie mają istotnego wpływu na ceny akcji LPP w ujęciu liniowym. 
+
+\subsection{Regresja uproszczona}
+
+Analiza istotności współczynników modelu pełnego \( R_2 = b_0 + b_1 \cdot R_1 + \varepsilon \) wykazała, że wyraz wolny (\(b_0\)) okazał się nieistotny (\(p > 0.05\)). Oznacza to, że na poziomie istotności \( \alpha = 0.05 \) nie mamy podstaw do odrzucenia hipotezy zerowej \( H_0: b_0 = 0 \). W związku z tym uproszczono model, eliminując wyraz wolny:
+
+\[
+R_2 = b_1 \cdot R_1 + \varepsilon.
+\]
+
+Dla uproszczonego modelu współczynnik nachylenia został oszacowany jako:
+
+\[
+b_1 = 0.40221.
+\]
+
+Test istotności współczynnika nachylenia zweryfikował hipotezę:
+
+\[
+H_0: b_1 = 0 \quad \text{przeciwko} \quad H_1: b_1 \neq 0.
+\]
+
+Wartość p-value wyniosła \( p < 2 \cdot 10^{-16} \), co oznacza, że możemy odrzucić hipotezę zerową na poziomie istotności \( \alpha = 0.05 \). Współczynnik nachylenia jest istotny statystycznie, co sugeruje, że istnieje zależność między log-zwrotami analizowanych spółek.
+
+Dopasowanie modelu można ocenić na podstawie podstawowych miar jakości:
+
+\begin{itemize}
+    \item Błąd standardowy reszt: \( 0.03047 \),
+    \item Współczynnik determinacji \( R^2 \): \( 0.147 \).
+\end{itemize}
+
+Wartość \( R^2 = 0.147 \) oznacza, że model wyjaśnia jedynie około \( 14.7\% \) zmienności log-zwrotów LPP. Relatywnie niska wartość współczynnika determinacji sugeruje, że zależność liniowa między zmiennymi nie jest silna i inne czynniki mogą znacząco wpływać na zmienność log-zwrotów LPP.
+
+Na podstawie oszacowanego modelu można również przeprowadzić predykcję. Dla średniego log-zwrotu Allegro \( R_1 = -0.00033 \) przewidywana wartość log-zwrotu LPP wynosi:
+
+\[
+\hat{R}_2 = b_1 \cdot R_1 = 0.40221 \cdot (-0.00033) = -0.00013.
+\]
+
+Oznacza to, że jeśli średni log-zwrot Allegro wynosi \( -0.00033 \), to zgodnie z modelem, oczekiwany log-zwrot LPP będzie wynosił \( -0.00013 \). 
+
+\subsection{Porównanie przedziałów ufności dla predykcji}
+Dla wartości \( \hat{R}_2 = -0.000062 \) wyznaczono przedziały ufności zarówno metodą analityczną, jak i bootstrapową.
+
+\subsubsection{Analityczny przedział ufności}
+Zgodnie z teorią regresji liniowej, przedział ufności dla predykcji \( \hat{R}_2 \) na poziomie ufności \(1-\alpha\) można obliczyć jako:
+\[
+\text{CI}_{\text{analityczny}} = \left[ \hat{R}_2 - t_{1-\alpha/2, n-2} \cdot \text{SE}, \; \hat{R}_2 + t_{1-\alpha/2, n-2} \cdot \text{SE} \right],
+\]
+gdzie:
+\begin{itemize}
+    \item \(t_{1-\alpha/2, n-2}\) – kwantyl rozkładu t-Studenta o \(n-2\) stopniach swobody,
+    \item \(\text{SE} = \sqrt{\hat{\sigma}^2 \left( \frac{1}{n} + \frac{(R_1 - \overline{R}_1)^2}{\sum_{i=1}^n (R_{1,i} - \overline{R}_1)^2} \right)}\) – błąd standardowy predykcji,
+    \item \(\hat{\sigma}^2\) – oszacowanie wariancji reszt.
+\end{itemize}
+
+Wyznaczony przedział ufności:
+\[
+\text{CI}_{\text{analityczny}} = [-0.00262, \; 0.00274].
+\]
+
+\subsubsection{Przedział ufności metodą bootstrapową}
+Technika bootstrapowa pozwala na wyznaczenie przedziałów ufności bez konieczności spełniania założeń o normalności rozkładu reszt. Zastosowano następujący algorytm:
+\begin{enumerate}
+    \item Z \( n = 500 \) obserwacji wygenerowano \(B = 1000\) próbek bootstrapowych poprzez losowanie z powtórzeniami.
+    \item Dla każdej próbki oszacowano model regresji oraz wykonano predykcję dla średniego \(R_1\).
+    \item Wyznaczono kwantyle empiryczne rzędu \(\alpha/2\) i \(1-\alpha/2\) z predykcji bootstrapowych, co pozwoliło wyznaczyć przedział ufności:
+    \[
+    \text{CI}_{\text{bootstrap}} = \left[ q_{\alpha/2}, \; q_{1-\alpha/2} \right].
+    \]
+\end{enumerate}
+
+Dla \( \alpha = 0.05 \) uzyskano przedział ufności:
+\[
+\text{CI}_{\text{bootstrap}} = [-0.00249, \;  0.00277].
+\]
+
+\subsubsection{Porównanie przedziałów ufności}
+Wyniki analitycznego oraz bootstrapowego przedziału ufności są następujące:
+
+\begin{itemize}
+    \item \textbf{Analityczny przedział ufności}: $[-0.00262, 0.00274]$
+    \item \textbf{Bootstrapowy przedział ufności}: $[-0.00249, 0.00277]$
+\end{itemize}
+
+Obserwujemy, że oba przedziały są zbliżone, jednak przedział bootstrapowy jest nieco szerszy. Może to wynikać z większej elastyczności tej metody, która nie wymaga założenia o normalności rozkładu reszt, w przeciwieństwie do podejścia analitycznego, bazującego na rozkładzie t-Studenta.
+
+\section{Podsumowanie}
+
+W niniejszej pracy przeprowadziliśmy szczegółową analizę log-zwrotów spółek Allegro.eu S.A. oraz LPP S.A. Głównym celem było zbadanie ich statystycznych właściwości, dopasowanie modeli probabilistycznych oraz analiza zależności między log-zwrotami za pomocą regresji liniowej.
+
+W pierwszej części dokonaliśmy wizualizacji danych oraz przeprowadziliśmy podstawową analizę statystyczną. Obliczone estymatory wartości oczekiwanej, wariancji i odchylenia standardowego pozwoliły na scharakteryzowanie zmienności log-zwrotów. Wyniki wskazały, że choć log-zwroty obu spółek wykazują podobne trendy, różnią się pod względem wariancji. Przeprowadziliśmy również analizę dobroci dopasowania rozkładów normalnego i t-Studenta, co pozwoliło stwierdzić, że model normalny lepiej opisuje dane.
+
+Kolejnym krokiem była analiza łącznego rozkładu log-zwrotów obu spółek. Obliczone macierze kowariancji i korelacji pozwoliły na ocenę wzajemnych zależności. Współczynnik korelacji wykazał umiarkowaną dodatnią zależność między spółkami, co sugeruje, że ceny akcji obu podmiotów są w pewnym stopniu skorelowane.
+
+Ostatnim etapem analizy była regresja liniowa, której celem było określenie relacji między log-zwrotami Allegro i LPP. Wyniki estymacji parametrów regresji wykazały statystycznie istotną zależność między zmiennymi, choć współczynnik determinacji R\textsuperscript{2} sugerował, że model liniowy wyjaśnia jedynie część zmienności log-zwrotów. Dodatkowo porównaliśmy przedziały ufności wyznaczone metodą analityczną i bootstrapową, co pozwoliło na ocenę stabilności oszacowań.
+
+Podsumowując, przeprowadzona analiza dostarczyła kompleksowego obrazu zmienności log-zwrotów oraz ich wzajemnych powiązań. Otrzymane wyniki wskazują, że log-zwroty Allegro i LPP wykazują istotne podobieństwa, choć występują różnice w ich dynamice. Zastosowane metody statystyczne pozwoliły na precyzyjną ocenę właściwości rozkładu i zależności między spółkami, co może stanowić podstawę do dalszych badań oraz podejmowania decyzji inwestycyjnych.
+
+
+\end{document}
