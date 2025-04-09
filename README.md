@@ -21,10 +21,10 @@ This project presents a comprehensive statistical analysis of log-returns for tw
 
 ## 📁 Project Structure
 
-- # R script (all scripts in one file) for data analysis and modeling
-- # LaTeX source file of the report
-- # Final report (compiled PDF) 
-- # README.md (this file)
+- R script (all scripts in one file) for data analysis and modeling
+- LaTeX source file of the report
+- Final report (compiled PDF) 
+- README.md (this file)
 
 ## 📊 Outputs and Visuals
 
